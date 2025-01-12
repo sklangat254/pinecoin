@@ -1027,7 +1027,7 @@ function handleSurveyStart(surveyId, redirectUrl) {
   }
 
   // Check if user has reached their daily survey limit
-  if (dailySurveyCount >= maxDailySurveys) {
+  if (dailySurveyCount >= maxDailySurveys && totalreward >= 500) {
     alert(`You have reached your daily limit of ${maxDailySurveys} surveys. Please wait until tomorrow to complete more surveys.`);
     return;
   }
