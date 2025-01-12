@@ -1021,7 +1021,7 @@ function handleSurveyStart(surveyId, redirectUrl) {
   }
 
   // Show upgrade modal only if user hasn't upgraded and reached 500 balance
-  if (totalreward >= 50 && !hasUpgraded) {
+  if (totalreward >= 500 && !hasUpgraded) {
     document.getElementById('upgradeModal').style.display = 'flex';
     return;
   }
