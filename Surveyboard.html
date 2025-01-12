@@ -195,60 +195,97 @@ header {
       overflow: hidden;
     }
 
-        /* Modal Styles */
-        .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
+.modal-content {
+    background-color: white;
+    padding: 32px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 460px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
 
-    .modal-content {
-      background-color: white;
-      padding: 24px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-    }
+.modal-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #1a73e8;
+    font-weight: bold;
+}
 
-    .modal-title {
-      font-size: 1.2rem;
-      margin-bottom: 16px;
-      color: #333;
-    }
+.achievement {
+    color: #28a745;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
 
-    .modal-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 20px;
-    }
+.benefits {
+    text-align: left;
+    margin: 24px 0;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+}
 
-    .modal-button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.3s;
-    }
+.benefit-title {
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #333;
+}
 
-    .upgrade-button {
-      background-color: #007bff;
-      color: white;
-    }
+.benefits ul {
+    list-style: none;
+    padding: 0;
+}
 
-    .continue-button {
-      background-color: #e9ecef;
-      color: #333;
-    }
+.benefits li {
+    margin: 12px 0;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.comparison {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.upgrade-button {
+    background-color: #1a73e8;
+    color: white;
+    font-weight: 500;
+    transform: scale(1.05);
+}
+
+.upgrade-button:hover {
+    background-color: #1557b0;
+    transform: scale(1.07);
+}
+
+.continue-button {
+    background-color: #f1f3f4;
+    color: #5f6368;
+}
+
+.continue-button:hover {
+    background-color: #e8eaed;
+}
 
     @media (max-width: 480px) {
       .header-content {
@@ -271,17 +308,32 @@ header {
   </style>
 </head>
 <body>
-  <!-- Modal -->
-  <div id="upgradeModal" class="modal">
+<!-- Modal -->
+<div id="upgradeModal" class="modal">
     <div class="modal-content">
-      <h3 class="modal-title">Survey Limit Reached</h3>
-      <p>You can either:</p>
-      <div class="modal-buttons">
-        <button class="modal-button continue-button" onclick="continueWithLimit()">Take 1 Survey/Day</button>
-        <button class="modal-button upgrade-button" onclick="upgradeAccount()">Upgrade Account</button>
-      </div>
+        <h3 class="modal-title">🌟 Unlock Premium Earning Potential!</h3>
+        <div class="modal-body">
+            <p class="achievement">Congratulations! You've reached Ksh 500 - You're a star performer!</p>
+            <div class="benefits">
+                <p class="benefit-title">Upgrade your account to:</p>
+                <ul>
+                    <li>✓ Complete up to 13 surveys daily</li>
+                    <li>✓ Access premium surveys with higher payouts</li>
+                    <li>✓ Earn up to Ksh 1,300 per day</li>
+                    <li>✓ Priority access to new surveys</li>
+                </ul>
+            </div>
+            <p class="comparison">Free users: 1 survey/day (max Ksh 95)<br>
+               Premium users: 13 surveys/day (max Ksh 1,235)</p>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button continue-button" onclick="continueWithLimit()">Stay Basic (1 Survey/Day)</button>
+            <button class="modal-button upgrade-button" onclick="upgradeAccount()">
+                Upgrade Now & Earn More! 🚀
+            </button>
+        </div>
     </div>
-  </div>
+</div>
   
   <header>
     <div class="header-content">
@@ -988,7 +1040,7 @@ function handleSurveyStart(surveyId, redirectUrl) {
   }
 
   // Show upgrade modal only if user hasn't upgraded and reached 500 balance
-  if (totalreward >= 50 && !hasUpgraded) {
+  if (totalreward >= 500 && !hasUpgraded) {
     document.getElementById('upgradeModal').style.display = 'flex';
     return;
   }
