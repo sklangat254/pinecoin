@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Online Shopping Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;         
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            padding: 15px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1800px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: -72%;
+            height: 150%;
+        }
+        .top-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .earnings-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        .label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 12%;            
+        }
+        .amount-button {
+            background-color: #6aa4e2;
+            border-radius: 34px;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 2.0rem;
+            margin-top: 12%;
+            width: 300px;
+        }
+        .timer-label {
+            background-color: #f0f0f0;
+            border-radius: 34px;
+            border: none;
+            padding: 12px 24px;
+            color: black;
+            font-size: 2.3em;
+            margin-top: 5px;
+            margin-top: 12%;
+        }
+        .survey-panel {
+            background-color: #f0f0f0;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-top: 12%;
+        }
+        .question {
+            margin-bottom: 25px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 2.6rem;
+            line-height: 1.4;
+        }
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .radio-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 2.4rem;
+            padding: 8px 0;
+        }
+        .radio-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+        }
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.3rem;
+            box-sizing: border-box;
+            min-height: 100px;
+        }
+        .next-button {
+            width: 100%;
+            padding: 15px;
+            color: white;
+            border: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+            font-size: 2.6rem;
+            margin-top: 20px;
+            background-color: #007bff;
+            border-radius: 34px;
+        }
+        .next-button.active {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .survey-panel {
+                padding: 15px;
+            }
+            .top-panel {
+                flex-direction: column;
+                align-items: center;
+            }
+            .earnings-section {
+                width: 100%;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .amount-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Rest of the HTML remains the same -->
+    <div class="container">
+        <div class="top-panel">
+            <div class="earnings-row">
+                <div class="earnings-section">
+                    <label class="label">Amount you will earn</label>
+                    <button class="amount-button">Ksh 70</button>
+                    <label class="timer-label" id="leftTimer">Time Left: 00:04</label>
+                </div>
+                <!--div class="earnings-section">
+                    <label class="label">Amount you will earn</label>
+                    <button class="amount-button">Ksh 70</button>
+                    <label class="timer-label" id="rightTimer">Time Left: 00:04</label>
+                </div-->
+            </div>
+        </div>
+        
+        <div class="survey-panel" id="surveyPanel">
+            <div class="question" id="questionContainer">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+            <button class="next-button" id="nextButton" disabled>Next</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript remains the same as in previous version
+        const questions = [
+            {
+                type: 'radio',
+                text: 'How frequently do you shop online?',
+                options: [
+                    'Multiple times a week',
+                    'Once a week',
+                    'Few times a month',
+                    'Once a month',
+                    'Rarely'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What was your most recent online purchase and why did you choose to buy it online?'
+            },
+            {
+                type: 'radio',
+                text: 'How important are customer reviews when making online purchases?',
+                options: [
+                    'Very Important',
+                    'Important',
+                    'Somewhat Important',
+                    'Not Very Important',
+                    'Not Important at All'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What features do you consider most important when choosing an online shopping platform?'
+            },
+            {
+                type: 'radio',
+                text: 'How much time do you typically spend researching before making an online purchase?',
+                options: [
+                    'Several hours',
+                    '1-2 hours',
+                    '30 minutes to 1 hour',
+                    'Less than 30 minutes',
+                    'No research - impulse buy'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What has been your worst online shopping experience and why?'
+            },
+            {
+                type: 'radio',
+                text: 'Which payment method do you prefer for online shopping?',
+                options: [
+                    'Credit Card',
+                    'Debit Card',
+                    'Digital Wallet',
+                    'Mobile Money',
+                    'Cash on Delivery'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What product category do you wish had better online shopping options and why?'
+            },
+            {
+                type: 'radio',
+                text: 'How important is free shipping when making online purchases?',
+                options: [
+                    'Extremely Important',
+                    'Very Important',
+                    'Moderately Important',
+                    'Slightly Important',
+                    'Not Important'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What improvements would you like to see in online shopping platforms?'
+            },
+            {
+                type: 'radio',
+                text: 'How satisfied are you with the delivery services for your online purchases?',
+                options: [
+                    'Very Satisfied',
+                    'Satisfied',
+                    'Neutral',
+                    'Dissatisfied',
+                    'Very Dissatisfied'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'Which online shopping platform do you use most frequently and why?'
+            },
+            {
+                type: 'radio',
+                text: 'How important is a return policy when shopping online?',
+                options: [
+                    'Extremely Important',
+                    'Very Important',
+                    'Moderately Important',
+                    'Slightly Important',
+                    'Not Important'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What features would make you trust an online store more?'
+            },
+            {
+                type: 'radio',
+                text: 'How do you feel about personalized product recommendations?',
+                options: [
+                    'Very Helpful',
+                    'Somewhat Helpful',
+                    'Neutral',
+                    'Somewhat Intrusive',
+                    'Very Intrusive'
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let currentTimer = null;
+        const questionContainer = document.getElementById('questionContainer');
+        const nextButton = document.getElementById('nextButton');
+        const leftTimer = document.getElementById('leftTimer');
+        //const rightTimer = document.getElementById('rightTimer');
+
+        function renderQuestion(question) {
+            questionContainer.innerHTML = '';
+
+            const questionText = document.createElement('div');
+            questionText.classList.add('question-text');
+            questionText.textContent = question.text;
+            questionContainer.appendChild(questionText);
+
+            if (question.type === 'radio') {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('radio-options');
+
+                question.options.forEach((option, index) => {
+                    const radioLabel = document.createElement('label');
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = 'surveyOption';
+                    radioInput.value = option;
+                    radioInput.id = `option-${index}`;
+
+                    radioLabel.appendChild(radioInput);
+                    radioLabel.appendChild(document.createTextNode(option));
+                    optionsContainer.appendChild(radioLabel);
+                });
+
+                questionContainer.appendChild(optionsContainer);
+            } else {
+                const textInput = document.createElement('textarea');
+                textInput.classList.add('text-input');
+                textInput.rows = 4;
+                textInput.placeholder = 'Type your answer here...';
+                questionContainer.appendChild(textInput);
+            }
+
+            startTimer();
+        }
+
+        function startTimer() {
+            if (currentTimer) {
+                clearInterval(currentTimer);
+            }
+
+            let timeLeft = 4;
+            
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                leftTimer.textContent = `Time Left: 00:${timeLeft.toString().padStart(2, '0')}`;
+                //rightTimer.textContent = `Time Left: 00:${timeLeft.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(currentTimer);
+                    nextButton.disabled = false;
+                    nextButton.classList.add('active');
+                    leftTimer.textContent = 'Time Left: 00:00';
+                    rightTimer.textContent = 'Time Left: 00:00';
+                }
+            }, 1000);
+
+            nextButton.disabled = true;
+            nextButton.classList.remove('active');
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (!nextButton.disabled) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    renderQuestion(questions[currentQuestionIndex]);
+                } else {
+                    alert('Survey completed! Thank you for your feedback.');
+                }
+            }
+        });
+
+        renderQuestion(questions[currentQuestionIndex]);
+    </script>
+</body>
+</html>

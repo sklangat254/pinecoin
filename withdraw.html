@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Survey App</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #d5d3d3;
+}
+
+header {
+  background-color: #00c853;
+  padding: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-image: url('menu.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.balance-display {
+  text-align: center;
+  color: white;
+}
+
+.balance-display p {
+  font-size: 14px;
+}
+
+.balance-display h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  background-color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.surveys {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 16px;
+  margin-top: 10%;
+}
+
+.surveys h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.location-note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.location-note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.survey-item {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  margin-bottom: 16px;
+  /*width: 40%;*/
+}
+
+.survey-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.survey-items {
+  background-color: #ada082;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  margin-bottom: 16px;
+  /*width: 40%;*/
+}
+
+.survey-infos {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.survey-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.survey-details h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.survey-details p {
+  font-size: 14px;
+  color: #666;
+}
+
+.payout {
+  font-weight: bold;
+  color: black;
+}
+
+.payouts {
+  font-weight: bolder;
+  color: black;
+  font-size: xx-large;
+}
+
+.p{
+    color: black;
+}
+
+.start-survey {
+  background-color: #1fbe61;
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  border-radius: 24px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5%;
+  margin-left: 40%;
+  width: 60%;
+  font-weight: bolder;
+}
+
+.currentplan {
+  background-color: #076b69;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 5%;
+  font-style: italic;
+}
+
+.error {
+  background-color: rgb(212, 245, 239);
+  border: none;
+  border-radius: 10px;
+  color: red;
+  font-size: 14px;
+  font-style: italic;
+  display: none;
+  padding: 8px 16px;
+  margin-top: 5%;
+}
+
+.yyy{
+    display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 2px solid #e8e7e7;
+      margin-top: 10%;
+      margin-bottom: 10%;
+      margin-left: 30%;
+}
+
+.form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .form-group input, 
+        .form-group select {
+            padding: 12px;
+            border: 1.5px solid #E0E0E0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(21, 152, 149, 0.2);
+        }
+
+    .circular-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 4px solid #dbfbdf;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-left: 50%;
+    }
+
+    .circular-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <section class="surveys">
+
+      <div class="survey-item" data-survey-id="">
+        <div class="survey-info">
+          <!--img src="images/best-paid-online-surveys.jpg" alt="Infotrack" class="survey-icon"-->
+          <div class="survey-details">
+            <div class="circular-image">
+              <img src="images/mpesa.png" alt="Payment verification">
+            </div>
+            <h4><span class="yyy">Withdraw</span></h4>
+            <div class="form-group">
+                <label for="nationalId">Available balance: <strong id="balance" style="color: #1fbe61;"></strong> </label>
+                <input type="tel" id="amount" name="nationalId" required placeholder="Enter amount">                
+            </div>
+            <label class="error" id="error">Enter a valid amount! </label>
+            <span class="yyy"></span><button class="start-survey" id="withdrawcash" onclick="withdraw()">Withdraw</button>
+          </div>
+        </div>        
+      </div>
+
+      <div class="survey-items">
+        <div class="survey-infos">
+            <p class="location-notes"><strong style="font-weight: bolder; color: #076b69;">NOTE</strong></br> Payment system is selected based on user location for convenience purpose.</p>
+        </div>        
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    localStorage.clear();
+    //let amnt = 500.00;
+    //localStorage.removeItem('totalreward');
+    //localStorage.setItem('totalreward',amnt);
+    //buttonwithdrawcash.disabled = false;
+    let error = document.getElementById('error');
+    let totalreward = localStorage.getItem('totalreward') || 0;
+    let balance = document.getElementById('balance');
+    balance.textContent = " Ksh " + totalreward;
+    function withdraw() {      
+      const amount = document.getElementById('amount').value;      
+      if ((amount >= 55) && (amount <= totalreward)) {
+        totalreward = totalreward - amount;
+        console.log(totalreward);
+        localStorage.removeItem('totalreward');
+        localStorage.setItem('totalreward',totalreward);
+        error.style.display = 'none';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+            }, 3000);        
+      } else {         
+        error.style.display = 'block';       
+      }    
+}
+  </script>
+</body>
+</html>

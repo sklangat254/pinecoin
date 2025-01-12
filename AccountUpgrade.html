@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Packages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .header h1 {
+            color: #1a1a1a;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.3rem;
+            padding: 1rem;
+        }
+
+        .packages-grids {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .package-cards {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-cards:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .current-plan-badge {
+            position: absolute;
+            top: 0.2rem;
+            right: 4.5rem;
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .package-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.7rem;
+        }
+
+        .package-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 0.7rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+            color: #4b5563;
+        }
+
+        .feature-item:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 0.3rem;
+        }
+
+        .upgrade-button {
+            width: 100%;
+            padding: 1rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .upgrade-button:hover {
+            background: #059669;
+        }
+
+        .upgrade-button:after {
+            content: "→";
+            transition: transform 0.3s ease;
+        }
+
+        .upgrade-button:hover:after {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Select Package</h1>
+            <p>Choose a plan which best suits you:</p>
+        </div>
+
+        <div class="packages-grids">
+            <div class="package-cards highlight">
+                <div class="current-plan-badge">CURRENT PLAN</div>
+                <h2 class="package-name">Free Account</h2>
+                <ul class="features-list">
+                    <li class="feature-item">Surveys per day: 1</li>
+                    <li class="feature-item">Monthly earnings: Ksh 1,500</li>
+                    <li class="feature-item">Minimum withdrawals: Ksh 4,500</li>
+                    <li class="feature-item">Earnings per survey: Ksh 40 - 50</li>
+                </ul>
+            </div>
+
+            <div class="package-card">
+                <h2 class="package-name">Business Basic</h2>
+                <div class="package-price">Ksh 400</div>
+                <ul class="features-list">
+                    <li class="feature-item">Surveys per day: 5</li>
+                    <li class="feature-item">Monthly earnings: Ksh 8,000</li>
+                    <li class="feature-item">Daily income: Ksh 500</li>
+                    <li class="feature-item">Minimum withdrawals: Ksh 3,000</li>
+                    <li class="feature-item">Earnings per survey: Ksh 50 - 100</li>
+                </ul>
+                <button class="upgrade-button" onclick="handleUpgrade(400)">Upgrade to Basic</button>
+            </div>
+
+            <div class="package-card">
+                <h2 class="package-name">Business Premium</h2>
+                <div class="package-price">Ksh 700</div>
+                <ul class="features-list">
+                    <li class="feature-item">Surveys per day: 10</li>
+                    <li class="feature-item">Monthly earnings: Ksh 15,000</li>
+                    <li class="feature-item">Daily income: Ksh 1,000</li>
+                    <li class="feature-item">Minimum withdrawals: Ksh 2,500</li>
+                    <li class="feature-item">Earnings per survey: Ksh 50 - 100</li>
+                </ul>
+                <button class="upgrade-button" onclick="handleUpgrade(700)">Upgrade to Premium</button>
+            </div>
+
+            <div class="package-card">
+                <h2 class="package-name">Business Expert</h2>
+                <div class="package-price">Ksh 1,300</div>
+                <ul class="features-list">
+                    <li class="feature-item">Surveys per day: 20</li>
+                    <li class="feature-item">Monthly earnings: Ksh 30,000</li>
+                    <li class="feature-item">Daily income: Ksh 2,000</li>
+                    <li class="feature-item">Minimum withdrawals: Ksh 2,000</li>
+                    <li class="feature-item">Earnings per survey: Ksh 50 - 100</li>
+                </ul>
+                <button class="upgrade-button" onclick="handleUpgrade(1300)">Upgrade to Expert</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleUpgrade(amount) {
+            try {
+                // Get current balance from localStorage or initialize to 0
+                //const currentBalance = localStorage.getItem('surveyBalance') || 0;
+                // Add new amount to current balance
+                const newBalance = amount;
+                // Store updated balance
+                localStorage.removeItem('surveyBalance');
+                localStorage.setItem('surveyBalance', newBalance);
+                // Redirect to payment page
+                window.location.href = 'Payment.html';
+            } catch (error) {
+                console.error('Error handling upgrade:', error);
+                alert('There was an error processing your upgrade. Please try again.');
+            }
+        }
+
+        // Add hover effect to cards
+        document.querySelectorAll('.package-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

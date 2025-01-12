@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenya Family Support Fund - Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1A5F7A;
+            --secondary-color: #159895;
+            --background-color: #F8F9FA;
+            --text-color: #333;
+            --accent-color: #57C5B6;
+            --light-accent: #9BE8D8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-color) 0%, #E9ECEF 100%);
+            line-height: 1.6;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .registration-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.07);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registration-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        .header p {
+            color: var(--secondary-color);
+            font-weight: 300;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .form-group input, 
+        .form-group select {
+            padding: 12px;
+            border: 1.5px solid #E0E0E0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(21, 152, 149, 0.2);
+        }
+
+        .required {
+            color: #DC3545;
+            margin-left: 4px;
+        }
+
+        .optional {
+            color: #6c757d;
+            font-size: 0.8em;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(21, 152, 149, 0.2);
+        }
+
+        .info-text {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--secondary-color);
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .registration-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <div class="header">
+            <h1>Kenya Family Support Fund</h1>
+            <p>Applicant Registration Form</p>
+        </div>
+
+        <form id="registrationForm" action="#" method="POST">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fullNames">Full Names <span class="required">*</span></label>
+                    <input type="text" id="fullNames" name="fullNames" required placeholder="Enter full names">
+                </div>
+
+                <div class="form-group">
+                    <label for="nationalId">National ID Number <span class="required">*</span></label>
+                    <input type="text" id="nationalId" name="nationalId" required placeholder="Enter National ID" pattern="\d{8}" title="8-digit National ID Number">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">Primary Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g., 0712345678" pattern="0[0-9]{9}" title="10-digit Kenyan phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="alternatePhone">Alternative Phone Number</label>
+                    <input type="tel" id="alternatePhone" name="alternatePhone" placeholder="Optional alternate number" pattern="0[0-9]{9}" title="10-digit Kenyan phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address <span class="optional">(Optional)</span></label>
+                    <input type="email" id="email" name="email" placeholder="Enter email address">
+                </div>
+
+                <div class="form-group">
+                    <label for="county">County <span class="required">*</span></label>
+                    <select id="county" name="county" required>
+                        <option value="">Select County</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Kwale">Kwale</option>
+                        <option value="Kilifi">Kilifi</option>
+                        <option value="Tana River">Tana River</option>
+                        <option value="Lamu">Lamu</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subCounty">Sub-County <span class="required">*</span></label>
+                    <input type="text" id="subCounty" name="subCounty" required placeholder="Enter Sub-County">
+                </div>
+
+                <div class="form-group">
+                    <label for="ward">Ward <span class="required">*</span></label>
+                    <input type="text" id="ward" name="ward" required placeholder="Enter Ward">
+                </div>
+
+                <div class="form-group">
+                    <label for="village">Village <span class="required">*</span></label>
+                    <input type="text" id="village" name="village" required placeholder="Enter Village">
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="postalAddress">Postal Address <span class="required">*</span></label>
+                    <input type="text" id="postalAddress" name="postalAddress" required placeholder="Enter Postal Address">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Application</button>
+        </form>
+
+        <p class="info-text">
+            * All fields marked with an asterisk are mandatory. 
+            Please ensure all information is accurate before submission.
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#DC3545';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#E0E0E0';
+                }
+            });
+
+            const phoneNumber = document.getElementById('phoneNumber');
+            const phoneRegex = /^0[0-9]{9}$/;
+            if (!phoneRegex.test(phoneNumber.value)) {
+                phoneNumber.style.borderColor = '#DC3545';
+                isValid = false;
+            }
+
+            const nationalId = document.getElementById('nationalId');
+            const nationalIdRegex = /^\d{8}$/;
+            if (!nationalIdRegex.test(nationalId.value)) {
+                nationalId.style.borderColor = '#DC3545';
+                isValid = false;
+            }
+
+            const email = document.getElementById('email');
+            if (email.value && !/\S+@\S+\.\S+/.test(email.value)) {
+                email.style.borderColor = '#DC3545';
+                isValid = false;
+            }
+
+            if (isValid) {
+                //alert('Application submitted successfully!');
+                window.location.href = 'familybank.html';
+                this.reset();
+            } else {
+                alert('Please fill in all required fields correctly.');
+            }
+        });
+    </script>
+</body>
+</html>

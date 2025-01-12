@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Survey App</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+header {
+      background: linear-gradient(135deg, #0056b3, #007bff);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+      max-width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .menu-btn {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: white;
+    }
+
+    .menu-icon {
+      display: block;
+      width: 24px;
+      height: 3px;
+      background-color: white;
+      position: relative;
+      transition: background-color 0.3s;
+    }
+
+    .menu-icon::before,
+    .menu-icon::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 3px;
+      background-color: white;
+      transition: transform 0.3s;
+    }
+
+    .menu-icon::before {
+      top: -8px;
+    }
+
+    .menu-icon::after {
+      bottom: -8px;
+    }
+
+    .balance-display {
+      text-align: center;
+      color: white;
+      padding: 12px 0;
+    }
+
+    .balance-display p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .balance-display h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .actions button {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .actions button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+.surveys {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+.surveys h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.location-note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.survey-item {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.survey-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.survey-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.survey-details h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.survey-details p {
+  font-size: 14px;
+  color: #666;
+}
+
+.payout {
+  font-weight: bold;
+}
+
+.start-survey {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.survey-item {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      margin-bottom: 16px;
+      transition: opacity 0.3s ease, height 0.3s ease;
+    }
+
+    .survey-item.hiding {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+        /* Modal Styles */
+        .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .upgrade-button {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .continue-button {
+      background-color: #e9ecef;
+      color: #333;
+    }
+
+    @media (max-width: 480px) {
+      .header-content {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        margin-top: 16px;
+      }
+
+      .survey-info {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .survey-icon {
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Modal -->
+  <div id="upgradeModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Survey Limit Reached</h3>
+      <p>You can either:</p>
+      <div class="modal-buttons">
+        <button class="modal-button continue-button" onclick="continueWithLimit()">Take 1 Survey/Day</button>
+        <button class="modal-button upgrade-button" onclick="upgradeAccount()">Upgrade Account</button>
+      </div>
+    </div>
+  </div>
+  
+  <header>
+    <div class="header-content">
+      <button class="menu-btn">
+        <span class="menu-icon"></span>
+      </button>
+      <div class="balance-display">
+        <p>Your Total Account Balance</p>
+        <h2 id="accountbal">Ksh 119.00</h2>
+      </div>
+      <div class="actions">
+        <button class="view-account" onclick="openprofile()">View Account</button>
+        <button class="referrals">Referrals</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="surveys">
+      <h3>Surveys For You Today</h3>
+      <p class="location-note">Surveys are automatically filtered based on your location</p>
+
+      <div class="survey-item" data-survey-id="infotrack">
+        <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Infotrack" class="survey-icon">
+          <div class="survey-details">
+            <h4>INFOTRACK</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 95</p>
+          </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('infotrack', 'infotrack.html')">Start Survey</button>
+      </div>
+
+      <div class="survey-item" data-survey-id="nationmedia">
+        <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Nation Media" class="survey-icon">
+          <div class="survey-details">
+            <h4>Nation Media</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 77</p>
+          </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('nationmedia', 'nationmedia.html')">Start Survey</button>
+      </div>
+
+      <div class="survey-item" data-survey-id="techgadgets">
+        <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Infotrack" class="survey-icon">
+          <div class="survey-details">
+            <h4>Tech Gadgets</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 81</p>
+          </div>
+        </div>
+        <button class="start-survey" id="techgadgets" onclick="handleSurveyStart('techgadgets', 'techgadgets.html')">Start Survey</button>
+      </div>
+
+      <div class="survey-item" data-survey-id="homeappliances">
+        <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Infotrack" class="survey-icon">
+          <div class="survey-details">
+            <h4>Home Appliances</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 65</p>
+          </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('homeappliances', 'homeappliances.html')"  id="homeappliances" onclick="homeappliances()">Start Survey</button>
+      </div>
+
+      <div class="survey-item" data-survey-id="glovofooddelivery">
+        <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Infotrack" class="survey-icon">
+          <div class="survey-details">
+            <h4>Glovo</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 68</p>
+          </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('glovofooddelivery', 'glovofooddelivery.html')"  id="glovo" onclick="glovo()">Start Survey</button>
+      </div>
+
+      <div class="survey-item" data-survey-id="safaricom">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Infotrack" class="survey-icon">
+            <div class="survey-details">
+                <h4>Safaricom LLC</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 72</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('safaricom', 'safaricom.html')">Start Survey</button>
+    </div>
+    
+    <!-- Update Absa item -->
+    <div class="survey-item" data-survey-id="absa">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Nation Media" class="survey-icon">
+            <div class="survey-details">
+                <h4>Absa Bank</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 84</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('absa', 'absabank.html')">Start Survey</button>
+    </div>
+    
+    <!-- Update Airtel item -->
+    <div class="survey-item" data-survey-id="airtel">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Tech Gadgets" class="survey-icon">
+            <div class="survey-details">
+                <h4>Airtel LLC</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 62</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('airtel', 'airtel.html')">Start Survey</button>
+    </div>
+    
+    <!-- Update Chicken Inn item -->
+    <div class="survey-item" data-survey-id="chickeninn">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Tech Gadgets" class="survey-icon">
+            <div class="survey-details">
+                <h4>Chicken Inn</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 42</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('chickeninn', 'chickeninn.html')">Start Survey</button>
+    </div>
+    
+    <!-- Update Cooperative Bank item -->
+    <div class="survey-item" data-survey-id="cooperative">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Tech Gadgets" class="survey-icon">
+            <div class="survey-details">
+                <h4>Cooperative Bank</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 75</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('cooperative', 'cooperative.html')">Start Survey</button>
+    </div>
+    
+    <!-- Update Electronics item -->
+    <div class="survey-item" data-survey-id="electronics">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Tech Gadgets" class="survey-icon">
+            <div class="survey-details">
+                <h4>Electronics</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 60</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('electronics', 'electronics.html')">Start Survey</button>
+    </div>
+    
+    <!-- Update Equity Bank item -->
+    <div class="survey-item" data-survey-id="equity">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Tech Gadgets" class="survey-icon">
+            <div class="survey-details">
+                <h4>Equity Bank</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 67</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('equity', 'equity.html')">Start Survey</button>
+    </div>
+
+    <div class="survey-item" data-survey-id="familybank">
+      <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Family Bank" class="survey-icon">
+          <div class="survey-details">
+              <h4>Family Bank</h4>
+              <p>Questions: Available</p>
+              <p class="payout">Payout: Ksh 57</p>
+          </div>
+      </div>
+      <button class="start-survey" onclick="handleSurveyStart('familybank', 'familybank.html')">Start Survey</button>
+  </div>
+  
+  <div class="survey-item" data-survey-id="shell">
+      <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="Shell" class="survey-icon">
+          <div class="survey-details">
+              <h4>Shell</h4>
+              <p>Questions: Available</p>
+              <p class="payout">Payout: Ksh 95</p>
+          </div>
+      </div>
+      <button class="start-survey" onclick="handleSurveyStart('shell', 'shell.html')">Start Survey</button>
+  </div>
+  
+  <div class="survey-item" data-survey-id="kcbbank">
+      <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="KCB Bank" class="survey-icon">
+          <div class="survey-details">
+              <h4>KCB Bank</h4>
+              <p>Questions: Available</p>
+              <p class="payout">Payout: Ksh 84</p>
+          </div>
+      </div>
+      <button class="start-survey" onclick="handleSurveyStart('kcbbank', 'kcbbank.html')">Start Survey</button>
+  </div>
+  
+  <div class="survey-item" data-survey-id="kfc">
+      <div class="survey-info">
+          <img src="images/best-paid-online-surveys.jpg" alt="KFC Joint" class="survey-icon">
+          <div class="survey-details">
+              <h4>KFC Joint</h4>
+              <p>Questions: Available</p>
+              <p class="payout">Payout: Ksh 74</p>
+          </div>
+      </div>
+      <button class="start-survey" onclick="handleSurveyStart('kfc', 'KFC.html')">Start Survey</button>
+  </div>
+
+      <div class="survey-item" data-survey-id="naivas">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Naivas" class="survey-icon">
+            <div class="survey-details">
+                <h4>Naivas</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 56</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('naivas', 'naivas.html')">Start Survey</button>
+    </div>
+    
+    <div class="survey-item" data-survey-id="telcom">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Telcom LLC" class="survey-icon">
+            <div class="survey-details">
+                <h4>Telcom LLC</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 55</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('telcom', 'telcom.html')">Start Survey</button>
+    </div>
+    
+    <div class="survey-item" data-survey-id="javarestaurant">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Java Restaurant" class="survey-icon">
+            <div class="survey-details">
+                <h4>Java Restaurant</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 63</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('javarestaurant', 'javarestaurant.html')">Start Survey</button>
+    </div>
+    
+    <div class="survey-item" data-survey-id="dairyfarm">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Dairy Farm" class="survey-icon">
+            <div class="survey-details">
+                <h4>Dairy Farm</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 45</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('dairyfarm', 'dairyfarm.html')">Start Survey</button>
+    </div>
+    
+    <div class="survey-item" data-survey-id="laundry">
+        <div class="survey-info">
+            <img src="images/best-paid-online-surveys.jpg" alt="Laundry Services" class="survey-icon">
+            <div class="survey-details">
+                <h4>Laundry Services</h4>
+                <p>Questions: Available</p>
+                <p class="payout">Payout: Ksh 51</p>
+            </div>
+        </div>
+        <button class="start-survey" onclick="handleSurveyStart('laundry', 'laundry.html')">Start Survey</button>
+    </div>
+
+  <!---------------------------------------------------------------------------No Next Page YET-------------------------------------------------------------------------------------------------------->
+
+  <!--div class="survey-item" data-survey-id="mobileapps">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Mobile Apps" class="survey-icon">
+        <div class="survey-details">
+            <h4>Mobile Apps Usage</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 75</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('mobileapps', 'mobileapps.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="onlineshopping">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Online Shopping" class="survey-icon">
+        <div class="survey-details">
+            <h4>Online Shopping Habits</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 85</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('onlineshopping', 'onlineshopping.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="personalfinance">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Personal Finance" class="survey-icon">
+        <div class="survey-details">
+            <h4>Personal Finance Management</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 90</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('personalfinance', 'personalfinance.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="smarttvs">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Smart TVs" class="survey-icon">
+        <div class="survey-details">
+            <h4>Smart TV Experience</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 70</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('smarttvs', 'smarttvs.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="onlineeducation">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Online Education" class="survey-icon">
+        <div class="survey-details">
+            <h4>Online Learning Experience</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 65</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('onlineeducation', 'onlineeducation.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="fitnesstrackers">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Fitness Trackers" class="survey-icon">
+        <div class="survey-details">
+            <h4>Fitness Tracker Usage</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 55</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('fitnesstrackers', 'fitnesstrackers.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="travelexperience">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Travel Experience" class="survey-icon">
+        <div class="survey-details">
+            <h4>Travel Experience Survey</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 95</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('travelexperience', 'travelexperience.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="fitnessandwellness">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Fitness and Wellness" class="survey-icon">
+        <div class="survey-details">
+            <h4>Fitness & Wellness Habits</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 60</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('fitnessandwellness', 'fitnessandwellness.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="dietandfood">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Diet and Food" class="survey-icon">
+        <div class="survey-details">
+            <h4>Diet & Food Preferences</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 45</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('dietandfood', 'dietandfood.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="streamingservices">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Streaming Services" class="survey-icon">
+        <div class="survey-details">
+            <h4>Streaming Services Usage</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 80</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('streamingservices', 'streamingservices.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="gaminghabits">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Gaming Habits" class="survey-icon">
+        <div class="survey-details">
+            <h4>Gaming Habits Survey</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 70</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('gaminghabits', 'gaminghabits.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="facebook">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Facebook" class="survey-icon">
+        <div class="survey-details">
+            <h4>Facebook Usage</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 65</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('facebook', 'facebook.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="cocacola">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Coca Cola" class="survey-icon">
+        <div class="survey-details">
+            <h4>Coca Cola Products</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 50</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('cocacola', 'cocacola.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="optiven">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Optiven" class="survey-icon">
+        <div class="survey-details">
+            <h4>Optiven Real Estate</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 85</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('optiven', 'optiven.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="socialmedia">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Social Media" class="survey-icon">
+        <div class="survey-details">
+            <h4>Social Media Usage</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 75</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('socialmedia', 'socialmedia.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="cooking">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Cooking" class="survey-icon">
+        <div class="survey-details">
+            <h4>Cooking Habits</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 45</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('cooking', 'cooking.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="clothingbrands">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Clothing Brands" class="survey-icon">
+        <div class="survey-details">
+            <h4>Clothing Brand Preferences</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 70</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('clothingbrands', 'clothingbrands.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="healthandwellness">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Health and Wellness" class="survey-icon">
+        <div class="survey-details">
+            <h4>Health & Wellness Survey</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 80</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('healthandwellness', 'healthandwellness.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="educationalresources">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Educational Resources" class="survey-icon">
+        <div class="survey-details">
+            <h4>Educational Resources</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 65</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('educationalresources', 'educationalresources.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="mentalhealth">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Mental Health" class="survey-icon">
+        <div class="survey-details">
+            <h4>Mental Health Awareness</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 90</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('mentalhealth', 'mentalhealth.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="cleanwater">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Clean Water" class="survey-icon">
+        <div class="survey-details">
+            <h4>Clean Water Access</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 75</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('cleanwater', 'cleanwater.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="womenrights">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Women Rights" class="survey-icon">
+        <div class="survey-details">
+            <h4>Women Rights Survey</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 85</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('womenrights', 'womenrights.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="politicalstability">
+    <div class="survey-info">
+        <img src="images/best-paid-online-surveys.jpg" alt="Political Stability" class="survey-icon">
+        <div class="survey-details">
+            <h4>Political Stability</h4>
+            <p>Questions: Available</p>
+            <p class="payout">Payout: Ksh 95</p>
+        </div>
+    </div>
+    <button class="start-survey" onclick="handleSurveyStart('politicalstability', 'politicalstability.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="kccmilk">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="KCC Milk" class="survey-icon">
+      <div class="survey-details">
+          <h4>KCC Milk Products</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 45</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('kccmilk', 'kccmilk.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="laptoppurchasing">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Laptop Purchasing" class="survey-icon">
+      <div class="survey-details">
+          <h4>Laptop Purchasing Habits</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 85</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('laptoppurchasing', 'laptoppurchasing.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="healthcare">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Healthcare" class="survey-icon">
+      <div class="survey-details">
+          <h4>Healthcare Services</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 90</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('healthcare', 'healthcare.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="robotics">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Robotics" class="survey-icon">
+      <div class="survey-details">
+          <h4>Robotics Technology</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 75</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('robotics', 'robotics.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="hotelindustry">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Hotel Industry" class="survey-icon">
+      <div class="survey-details">
+          <h4>Hotel Industry Experience</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 70</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('hotelindustry', 'hotelindustry.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="kplc">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="KPLC" class="survey-icon">
+      <div class="survey-details">
+          <h4>KPLC Services</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 65</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('kplc', 'kplc.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="shopping">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Shopping" class="survey-icon">
+      <div class="survey-details">
+          <h4>Shopping Habits</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 55</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('shopping', 'shopping.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="furniture">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Furniture" class="survey-icon">
+      <div class="survey-details">
+          <h4>Furniture Preferences</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 80</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('furniture', 'furniture.html')">Start Survey</button>
+</div>
+
+<div class="survey-item" data-survey-id="homedesign">
+  <div class="survey-info">
+      <img src="images/best-paid-online-surveys.jpg" alt="Home Design" class="survey-icon">
+      <div class="survey-details">
+          <h4>Home Design Preferences</h4>
+          <p>Questions: Available</p>
+          <p class="payout">Payout: Ksh 85</p>
+      </div>
+  </div>
+  <button class="start-survey" onclick="handleSurveyStart('homedesign', 'homedesign.html')">Start Survey</button>
+</div-->
+
+    </section>
+  </main>
+
+  <script>
+//localStorage.clear();
+let hasupgraded = localStorage.getItem('surveyBalances');
+if (hasupgraded){
+  localStorage.setItem('hasUpgraded', 'true');
+}
+
+let dailySurveyCount = parseInt(localStorage.getItem('dailySurveyCount') || '0');
+let lastSurveyDate = localStorage.getItem('lastSurveyDate');
+const today = new Date().toDateString();
+let previousReward = parseFloat(localStorage.getItem('previousReward') || '0');
+
+// Reset daily count if it's a new day
+if (lastSurveyDate !== today) {
+  dailySurveyCount = 0;
+  localStorage.setItem('dailySurveyCount', '0');
+  localStorage.setItem('lastSurveyDate', today);
+  // Reset previous reward to current total reward at the start of new day
+  const currentReward = parseFloat(localStorage.getItem('totalreward') || '0');
+  previousReward = currentReward;
+  localStorage.setItem('previousReward', previousReward.toString());
+}
+
+function handleSurveyStart(surveyId, redirectUrl) {
+  const totalreward = parseFloat(localStorage.getItem('totalreward') || '0');
+  const surveyBalance = parseInt(localStorage.getItem('surveyBalance') || '0');
+  const hasUpgraded = localStorage.getItem('hasUpgraded') === 'true';
+  let maxDailySurveys = 1; // Default limit for non-upgraded users
+
+  // Set max daily surveys based on surveyBalance if user has upgraded
+  if (hasUpgraded) {
+    if (surveyBalance === 400) maxDailySurveys = 4;
+    else if (surveyBalance === 700) maxDailySurveys = 7;
+    else if (surveyBalance === 1300) maxDailySurveys = 13;
+  }
+
+  // Show upgrade modal only if user hasn't upgraded and reached 500 balance
+  if (totalreward >= 50 && !hasUpgraded) {
+    document.getElementById('upgradeModal').style.display = 'flex';
+    return;
+  }
+
+  // Check if user has reached their daily survey limit
+  if (dailySurveyCount >= maxDailySurveys) {
+    alert(`You have reached your daily limit of ${maxDailySurveys} surveys. Please wait until tomorrow to complete more surveys.`);
+    return;
+  }
+
+  // Store the current URL before redirect for checking reward change
+  localStorage.setItem('lastSurveyUrl', redirectUrl);
+  
+  // Redirect to survey
+  window.location.href = redirectUrl;
+}
+
+// New function to check and update survey count after survey completion
+function checkAndUpdateSurveyCount() {
+  const totalreward = parseFloat(localStorage.getItem('totalreward') || '0');
+  const lastSurveyUrl = localStorage.getItem('lastSurveyUrl');
+  
+  // Only increment if reward has increased
+  if (totalreward > previousReward) {
+    dailySurveyCount++;
+    localStorage.setItem('dailySurveyCount', dailySurveyCount.toString());
+    
+    // Update previous reward
+    previousReward = totalreward;
+    localStorage.setItem('previousReward', previousReward.toString());
+  }
+}
+
+function openprofile() {
+  window.location.href = 'profile.html';
+}
+
+function continueWithLimit() {
+  document.getElementById('upgradeModal').style.display = 'none';
+}
+
+function upgradeAccount() {
+  window.location.href = 'AccountUpgrade.html';
+}
+
+function hideCompletedSurveys() {
+  const completedSurveys = JSON.parse(localStorage.getItem('completedSurveys') || '[]');
+  completedSurveys.forEach(surveyId => {
+    const surveyItem = document.querySelector(`[data-survey-id="${surveyId}"]`);
+    if (surveyItem) {
+      surveyItem.classList.add('hiding');
+    }
+  });
+}
+
+// Update account balance display
+function updateAccountBalance() {
+  let accountbal = document.getElementById('accountbal');
+  let totalreward = localStorage.getItem('totalreward');
+  if (accountbal) {
+    accountbal.textContent = "Ksh " + (totalreward || '0');
+  }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  hideCompletedSurveys();
+  updateAccountBalance();
+  checkAndUpdateSurveyCount(); // Check for reward changes on page load
+});
+  </script>
+</body>
+</html>

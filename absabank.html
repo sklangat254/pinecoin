@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Absa Bank Customer Experience Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;         
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            padding: 15px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1800px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: -72%;
+            height: 150%;
+        }
+        .top-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .earnings-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        .label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 12%;            
+        }
+        .amount-button {
+            background-color: #6aa4e2;
+            border-radius: 34px;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 2.0rem;
+            margin-top: 12%;
+            width: 300px;
+        }
+        .timer-label {
+            background-color: #f0f0f0;
+            border-radius: 34px;
+            border: none;
+            padding: 12px 24px;
+            color: black;
+            font-size: 2.3em;
+            margin-top: 5px;
+            margin-top: 12%;
+        }
+        .survey-panel {
+            background-color: #f0f0f0;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-top: 12%;
+        }
+        .question {
+            margin-bottom: 25px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 2.6rem;
+            line-height: 1.4;
+        }
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .radio-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 2.4rem;
+            padding: 8px 0;
+        }
+        .radio-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+        }
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.3rem;
+            box-sizing: border-box;
+            min-height: 100px;
+        }
+        .next-button {
+            width: 100%;
+            padding: 15px;
+            color: white;
+            border: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+            font-size: 2.6rem;
+            margin-top: 20px;
+            background-color: #007bff;
+            border-radius: 34px;
+        }
+        .next-button.active {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .survey-panel {
+                padding: 15px;
+            }
+            .top-panel {
+                flex-direction: column;
+                align-items: center;
+            }
+            .earnings-section {
+                width: 100%;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .amount-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-panel">
+            <div class="earnings-section">
+                <label class="label">Amount you will earn</label>
+                <button class="amount-button">Ksh 84</button>
+                <label class="timer-label" id="leftTimer">Time Left: 00:04</label>
+            </div>
+            <!--div class="earnings-section">
+                <label class="label">Amount you will earn</label>
+                <button class="amount-button">Ksh 70</button>
+                <label class="timer-label" id="rightTimer">Time Left: 00:04</label>
+            </div-->
+        </div>
+        
+        <div class="survey-panel" id="surveyPanel">
+            <div class="question" id="questionContainer">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+            <button class="next-button" id="nextButton" disabled>Next</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                type: 'radio',
+                text: 'How satisfied are you with your overall banking experience at Absa Bank?',
+                options: [
+                    'Very Satisfied',
+                    'Satisfied',
+                    'Neutral',
+                    'Dissatisfied',
+                    'Very Dissatisfied'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What banking services or features do you appreciate most about Absa Bank?'
+            },
+            {
+                type: 'radio',
+                text: 'How would you rate the quality of Absa Bank\'s customer service?',
+                options: [
+                    'Excellent',
+                    'Good',
+                    'Average',
+                    'Poor',
+                    'Very Poor'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'Describe your most recent interaction with Absa Bank staff.'
+            },
+            {
+                type: 'radio',
+                text: 'How convenient are Absa Bank\'s digital banking services?',
+                options: [
+                    'Very Convenient',
+                    'Convenient',
+                    'Neutral',
+                    'Inconvenient',
+                    'Very Inconvenient'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What improvements would you suggest for Absa Bank\'s services?'
+            },
+            {
+                type: 'radio',
+                text: 'How would you rate the affordability of Absa Bank\'s banking products?',
+                options: [
+                    'Excellent',
+                    'Good',
+                    'Average',
+                    'Poor',
+                    'Very Poor'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'Tell us about your favorite Absa Bank product or service.'
+            },
+            {
+                type: 'radio',
+                text: 'How easy is it to manage your Absa Bank account?',
+                options: [
+                    'Very Easy',
+                    'Easy',
+                    'Neutral',
+                    'Difficult',
+                    'Very Difficult'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What new banking services would you like to see from Absa Bank?'
+            },
+            {
+                type: 'radio',
+                text: 'How likely are you to recommend Absa Bank to friends or family?',
+                options: [
+                    'Very Likely',
+                    'Likely',
+                    'Neutral',
+                    'Unlikely',
+                    'Very Unlikely'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'Share a memorable experience with Absa Bank.'
+            },
+            {
+                type: 'radio',
+                text: 'How satisfied are you with Absa Bank\'s mobile banking app?',
+                options: [
+                    'Very Satisfied',
+                    'Satisfied',
+                    'Neutral',
+                    'Dissatisfied',
+                    'Very Dissatisfied'
+                ]
+            },
+            {
+                type: 'text',
+                text: 'What additional features would you like to see in Absa Bank\'s mobile app?'
+            },
+            {
+                type: 'radio',
+                text: 'How would you rate Absa Bank\'s loan and credit services?',
+                options: [
+                    'Excellent',
+                    'Good',
+                    'Average',
+                    'Poor',
+                    'Very Poor'
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let currentTimer = null;
+        const questionContainer = document.getElementById('questionContainer');
+        const nextButton = document.getElementById('nextButton');
+        const leftTimer = document.getElementById('leftTimer');
+        //const rightTimer = document.getElementById('rightTimer');
+
+        function renderQuestion(question) {
+            // Clear previous question
+            questionContainer.innerHTML = '';
+
+            // Create question text
+            const questionText = document.createElement('div');
+            questionText.classList.add('question-text');
+            questionText.textContent = question.text;
+            questionContainer.appendChild(questionText);
+
+            // Render based on question type
+            if (question.type === 'radio') {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('radio-options');
+
+                question.options.forEach((option, index) => {
+                    const radioLabel = document.createElement('label');
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = 'surveyOption';
+                    radioInput.value = option;
+                    radioInput.id = `option-${index}`;
+
+                    radioLabel.appendChild(radioInput);
+                    radioLabel.appendChild(document.createTextNode(option));
+                    optionsContainer.appendChild(radioLabel);
+                });
+
+                questionContainer.appendChild(optionsContainer);
+            } else {
+                const textInput = document.createElement('textarea');
+                textInput.classList.add('text-input');
+                textInput.rows = 4;
+                textInput.placeholder = 'Type your answer here...';
+                questionContainer.appendChild(textInput);
+            }
+
+            // Start timer immediately
+            startTimer();
+        }
+
+        function startTimer() {
+            // Clear any existing timer
+            if (currentTimer) {
+                clearInterval(currentTimer);
+            }
+
+            let timeLeft = 4;
+            
+            currentTimer = setInterval(() => {
+                timeLeft--;
+                leftTimer.textContent = `Time Left: 00:${timeLeft.toString().padStart(2, '0')}`;
+                //rightTimer.textContent = `Time Left: 00:${timeLeft.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(currentTimer);
+                    nextButton.disabled = false;
+                    nextButton.classList.add('active');
+                    leftTimer.textContent = 'Time Left: 00:00';
+                    rightTimer.textContent = 'Time Left: 00:00';
+                }
+            }, 1000);
+
+            // Ensure next button is disabled at start of timer
+            nextButton.disabled = true;
+            nextButton.classList.remove('active');
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (!nextButton.disabled) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    renderQuestion(questions[currentQuestionIndex]);
+                    if (currentQuestionIndex == questions.length-1){
+                        
+                        nextButton.textContent = "Submit";
+                    }
+                } else {
+                    completeSurvey('absa');
+            function completeSurvey(surveyId) {
+            // Get completed surveys from localStorage
+            
+            const completedSurveys = JSON.parse(localStorage.getItem('completedSurveys') || '[]');
+            
+            // Add this survey to completed list if not already there
+            if (!completedSurveys.includes(surveyId)) {
+                completedSurveys.push(surveyId);
+                localStorage.setItem('completedSurveys', JSON.stringify(completedSurveys));
+                
+                // Update reward (adjust amount as needed)
+                let currentReward = parseFloat(localStorage.getItem('totalreward') || '0');
+                currentReward += 84; // Adjust this value based on the survey's payout
+                localStorage.setItem('totalreward', currentReward.toString());
+                
+            }
+            
+            // Redirect back to main page
+            window.location.href = 'Surveyboard.html';
+        }
+                }
+            }
+        });
+
+        // Start the survey
+        renderQuestion(questions[currentQuestionIndex]);
+    </script>
+</body>
+</html>

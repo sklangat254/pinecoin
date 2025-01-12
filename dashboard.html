@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Survey Dashboard</title>
+  <style>
+    /* Previous styles remain the same until .transaction-history */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      padding: 30px;
+      width: 95%;
+      max-width: 1000px;
+      margin: 20px auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .profile img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #007bff;
+      padding: 2px;
+    }
+
+    .profile-info h3 {
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .profile-info p {
+      color: #7f8c8d;
+      font-size: 0.9em;
+    }
+
+    .account-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .info-item {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eee;
+    }
+
+    .info-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-item h4 {
+      color: #34495e;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+    }
+
+    .info-item p {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .account-type {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .free-account {
+      background-color: #e1f5fe;
+      color: #0288d1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .upgrade-btn {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .withdraw-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .surveys-btn {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    .referrals-btn {
+      background-color: #9c27b0;
+      color: white;
+    }
+
+    .add-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .transaction-history {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+      transition: opacity 0.5s ease, height 0.5s ease;
+    }
+
+    .transaction-history.visible {
+      opacity: 1;
+      height: auto;
+      min-height: 200px;
+    }
+
+    .transaction-history h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .transaction-item {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      align-items: center;
+    }
+
+    .transaction-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .transaction-amount {
+      font-weight: bold;
+      color: #4caf50;
+    }
+
+    .earnings-overview {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+      transition: opacity 0.5s ease, height 0.5s ease;
+    }
+
+    .earnings-overview.visible {
+      opacity: 1;
+      height: auto;
+      min-height: 350px;
+    }
+
+    .earnings-overview h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .chart {
+      height: 250px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .bar-container {
+      height: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .bar {
+      width: 40px;
+      background: linear-gradient(to top, #2196f3, #64b5f6);
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      transition: height 0.5s ease;
+    }
+
+    .bar::before {
+      content: attr(data-value);
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8em;
+      color: #34495e;
+    }
+
+    .bar::after {
+      content: attr(data-day);
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8em;
+      color: #7f8c8d;
+    }
+
+    .info-banner {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      padding: 15px;
+      border-radius: 12px;
+      margin: 20px 0;
+      text-align: center;
+      color: #f57c00;
+    }
+
+    .no-data-message {
+      text-align: center;
+      color: #7f8c8d;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .payment-method {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-method.active {
+            border-color: #2196f3;
+            background-color: #e3f2fd;
+        }
+
+        .payment-method img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .payment-method h3 {
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #2196f3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .save-btn {
+            background-color: #2196f3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            background-color: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        .validation-error {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+                /* Previous styles remain the same */
+          .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* New styles for details view */
+        .details-view {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .details-view.active {
+            display: block;
+        }
+
+        .details-card {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e3f2fd;
+        }
+
+        .details-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e3f2fd;
+        }
+
+        .details-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .details-header h3 {
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .detail-item {
+            margin: 15px 0;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .change-btn {
+            background-color: #ff9800;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .change-btn:hover {
+            background-color: #f57c00;
+            transform: translateY(-2px);
+        }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="profile">
+        <img src="images/best-paid-online-surveys.jpg" alt="Profile Picture">
+        <div class="profile-info">
+          <h3 id="names"></h3>
+          <p id="email"></p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="account-info">
+        <div class="info-item">
+          <h4>Account Type</h4>
+          <div class="account-type">
+            <span class="free-account">Free Account</span>
+            <button class="upgrade-btn" onclick="upgrade()">Upgrade</button>
+          </div>
+        </div>
+        <div class="info-item">
+          <h4>Account Balance</h4>
+          <p id="accountBalance">Ksh 0</p>
+          <button class="withdraw-btn" onclick="withdraw()">Withdraw $</button>
+        </div>
+        <div class="info-item">
+          <h4>Available Surveys</h4>
+          <p id="availableSurveys">0</p>
+          <button class="surveys-btn" onclick="takesurveys()">Take Surveys</button>
+        </div>
+        <div class="info-item">
+          <h4>Earn Ksh 120 per referral</h4>
+          <p> <Span style="color: #ff9800;">0 points</Span></p>
+          <button class="referrals-btn">Referrals</button>
+        </div>
+        <div class="info-item">
+          <h4>Payment Details</h4>
+          <p>Not Provided</p>
+          <button class="add-btn">Add +</button>
+        </div>
+      </div>
+
+      <div class="info-banner">
+        Currency is based on your country for convenience
+      </div>
+
+      <div id="transactionHistory" class="transaction-history">
+        <h2>Transaction History</h2>
+        <div id="transactionList"></div>
+      </div>
+
+      <div id="earningsOverview" class="earnings-overview">
+        <h2>Earnings Overview</h2>
+        <div class="chart">
+          <div class="bar-container" id="barContainer"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 style="color: #2c3e50; margin-bottom: 20px;">Payment Details</h2>
+
+                    <!-- Details View (shown when payment details exist) -->
+                    <div id="detailsView" class="details-view">
+                      <div class="details-card">
+                          <div class="details-header">
+                              <img id="methodIcon" src="" alt="Payment Method">
+                              <h3 id="methodTitle"></h3>
+                          </div>
+                          <div id="detailsList">
+                              <!-- Details will be populated dynamically -->
+                          </div>
+                      </div>
+                      <button class="change-btn" onclick="resetPaymentDetails()">Change Payment Details</button>
+                  </div>
+        
+        <div class="payment-methods">
+            <div class="payment-method active" data-method="bank">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTk2ZjMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB4PSIyIiB5PSI3IiB3aWR0aD0iMjAiIGhlaWdodD0iMTQiIHJ4PSIyIiByeT0iMiI+PC9yZWN0PjxsaW5lIHgxPSI2IiB5MT0iMTEiIHgyPSI2IiB5Mj0iMTciPjwvbGluZT48L3N2Zz4=" alt="Bank">
+                <h3>Bank Transfer</h3>
+            </div>
+            <div class="payment-method" data-method="mpesa">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM0Y2FmNTAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjAgMTBWOE0yMCA2djJNNCAxNHYyTTQgMTh2LTIiPjwvcGF0aD48cmVjdCB4PSI4IiB5PSI2IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgcng9IjIiPjwvcmVjdD48L3N2Zz4=" alt="MPesa">
+                <h3>M-Pesa</h3>
+            </div>
+        </div>
+
+        <div id="bankForm" class="form-section active">
+            <div class="form-group">
+                <label for="bankName">Bank Name</label>
+                <input type="text" id="bankName" required>
+                <div class="validation-error">Please enter bank name</div>
+            </div>
+            <div class="form-group">
+                <label for="accountName">Account Name</label>
+                <input type="text" id="accountName" required>
+                <div class="validation-error">Please enter account name</div>
+            </div>
+            <div class="form-group">
+                <label for="accountNumber">Account Number</label>
+                <input type="text" id="accountNumber" required>
+                <div class="validation-error">Please enter a valid account number</div>
+            </div>
+        </div>
+
+        <div id="mpesaForm" class="form-section">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" required>
+                <div class="validation-error">Please enter your full name</div>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" required>
+                <div class="validation-error">Please enter a valid phone number</div>
+            </div>
+            <div class="form-group">
+                <label for="altNumber">Alternative Number (Optional)</label>
+                <input type="tel" id="altNumber">
+            </div>
+        </div>
+
+        <button class="save-btn" onclick="savePaymentDetails()">Save Payment Details</button>
+    </div>
+</div>
+
+  <script>
+    // Check for account creation
+    window.onload = function() {
+      const accountCreated = localStorage.getItem('accountcreated');
+      if (!accountCreated) {
+        window.location.href = 'signup.html';
+        return;
+      }
+
+      let names = localStorage.getItem('fullnames');
+      //let phone = localStorage.getItem('phone');
+      //let phonenum = localStorage.getItem('phonenum');
+      let email = localStorage.getItem('email');
+
+      document.getElementById('names').textContent = names;
+      document.getElementById('email').textContent = email;
+      
+      // Initialize dashboard
+      updateDashboard();
+      checkAndDisplaySections();
+
+      const savedDetails = localStorage.getItem('paymentDetails');
+            if (savedDetails) {
+                const details = JSON.parse(savedDetails);
+                if (details.method === 'bank') {
+                    document.getElementById('bankName').value = details.bankName;
+                    document.getElementById('accountName').value = details.accountName;
+                    document.getElementById('accountNumber').value = details.accountNumber;
+                } else {
+                    document.getElementById('fullName').value = details.fullName;
+                    document.getElementById('phoneNumber').value = details.phoneNumber;
+                    document.getElementById('altNumber').value = details.alternativeNumber || '';
+                }
+            }
+    };
+
+            // Show modal when Add+ button is clicked
+            document.querySelector('.add-btn').addEventListener('click', function() {
+            document.getElementById('paymentModal').style.display = 'block';
+        });
+
+        // Close modal when clicking the close button or outside the modal
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('paymentModal').style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target == document.getElementById('paymentModal')) {
+                document.getElementById('paymentModal').style.display = 'none';
+            }
+        });
+
+        // Handle payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                // Update active states
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show corresponding form
+                const methodType = this.getAttribute('data-method');
+                document.querySelectorAll('.form-section').forEach(form => form.classList.remove('active'));
+                document.getElementById(methodType + 'Form').classList.add('active');
+            });
+        });
+
+        function validateForm(methodType) {
+            let isValid = true;
+            const fields = methodType === 'bank' 
+                ? ['bankName', 'accountName', 'accountNumber']
+                : ['fullName', 'phoneNumber'];
+
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                const error = input.nextElementSibling;
+                
+                if (!input.value.trim()) {
+                    error.style.display = 'block';
+                    isValid = false;
+                } else {
+                    error.style.display = 'none';
+                }
+            });
+
+            return isValid;
+        }
+
+        function savePaymentDetails() {
+            const activeMethod = document.querySelector('.payment-method.active').getAttribute('data-method');
+            
+            if (!validateForm(activeMethod)) {
+                return;
+            }
+
+            let paymentDetails;
+            if (activeMethod === 'bank') {
+                paymentDetails = {
+                    method: 'bank',
+                    bankName: document.getElementById('bankName').value,
+                    accountName: document.getElementById('accountName').value,
+                    accountNumber: document.getElementById('accountNumber').value
+                };
+            } else {
+                paymentDetails = {
+                    method: 'mpesa',
+                    fullName: document.getElementById('fullName').value,
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    alternativeNumber: document.getElementById('altNumber').value
+                };
+            }
+
+            // Save to localStorage
+            localStorage.setItem('paymentDetails', JSON.stringify(paymentDetails));
+            
+            // Update dashboard display
+            document.querySelector('.info-item:last-child p').textContent = 
+                activeMethod === 'bank' ? paymentDetails.bankName : paymentDetails.phoneNumber;
+
+            // Close modal
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+    // Navigation functions
+    function takesurveys() {
+      window.location.href = 'Surveyboard.html';
+    }
+
+    function upgrade() {
+      window.location.href = 'AccountUpgrade.html';
+    }
+
+    function withdraw() {
+      window.location.href = 'withdraw.html';
+    }
+
+    // Dashboard updates
+    function updateDashboard() {
+      console.log("000000")
+      let balance = localStorage.getItem('totalreward') || 0;
+      const surveys = localStorage.getItem('surveysavailable') || 0;
+      
+      document.getElementById('accountBalance').textContent = "Ksh " + balance;
+      document.getElementById('availableSurveys').textContent = surveys;
+    }
+
+    // Check if sections should be displayed
+    function checkAndDisplaySections() {
+      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      const weeklyEarnings = JSON.parse(localStorage.getItem('weeklyEarnings')) || Array(7).fill(0);
+      const hasEarnings = weeklyEarnings.some(earning => earning > 0);
+      
+      const transactionHistory = document.getElementById('transactionHistory');
+      const earningsOverview = document.getElementById('earningsOverview');
+      
+      // Show/hide transaction history
+      if (transactions.length > 0) {
+        transactionHistory.classList.add('visible');
+        loadTransactions(transactions);
+      } else {
+        transactionHistory.classList.remove('visible');
+      }
+      
+      // Show/hide earnings overview
+      if (hasEarnings) {
+        earningsOverview.classList.add('visible');
+        initializeChart(weeklyEarnings);
+      } else {
+        earningsOverview.classList.remove('visible');
+      }
+    }
+
+    // Transaction history management
+    function loadTransactions(transactions) {
+      const transactionList = document.getElementById('transactionList');
+      transactionList.innerHTML = '';
+
+      transactions.slice().reverse().forEach(transaction => {
+        const item = document.createElement('div');
+        item.className = 'transaction-item';
+        item.innerHTML = `
+          <div class="transaction-date">${new Date(transaction.date).toLocaleDateString()}</div>
+          <div class="transaction-type">${transaction.type}</div>
+          <div class="transaction-amount">Ksh ${transaction.amount}</div>
+        `;
+        transactionList.appendChild(item);
+      });
+    }
+
+    // Earnings chart
+    function initializeChart(weeklyEarnings) {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const barContainer = document.getElementById('barContainer');
+      barContainer.innerHTML = '';
+
+      const maxEarning = Math.max(...weeklyEarnings, 1);
+      
+      days.forEach((day, index) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.setAttribute('data-day', day);
+        bar.setAttribute('data-value', `Ksh ${weeklyEarnings[index]}`);
+        
+        const height = (weeklyEarnings[index] / maxEarning) * 200;
+        bar.style.height = `${height}px`;
+        
+        barContainer.appendChild(bar);
+      });
+    }
+
+    // Update earnings for current day
+    function updateDailyEarnings(amount) {
+      const currentDay = new Date().getDay();
+      const weeklyEarnings = JSON.parse(localStorage.getItem('weeklyEarnings')) || Array(7).fill(0);
+      
+      weeklyEarnings[currentDay] += Number(amount);
+      localStorage.setItem('weeklyEarnings', JSON.stringify(weeklyEarnings));
+      
+      checkAndDisplaySections();
+    }
+
+    // Listen for balance changes
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'totalreward' || e.key === 'surveysavailable') {
+        updateDashboard();
+      }
+      if (e.key === 'transactions') {
+        const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        if (transactions.length > 0) {
+          const lastTransaction = transactions[transactions.length - 1];
+          updateDailyEarnings(lastTransaction.amount);
+        }
+        checkAndDisplaySections();
+      }
+    });
+
+            // Previous JavaScript remains, with these additions/modifications:
+        
+            function showDetailsView(details) {
+            const detailsView = document.getElementById('detailsView');
+            const paymentMethodView = document.getElementById('paymentMethodView');
+            const methodIcon = document.getElementById('methodIcon');
+            const methodTitle = document.getElementById('methodTitle');
+            const detailsList = document.getElementById('detailsList');
+
+            // Set method icon and title
+            if (details.method === 'bank') {
+                methodIcon.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTk2ZjMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB4PSIyIiB5PSI3IiB3aWR0aD0iMjAiIGhlaWdodD0iMTQiIHJ4PSIyIiByeT0iMiI+PC9yZWN0PjxsaW5lIHgxPSI2IiB5MT0iMTEiIHgyPSI2IiB5Mj0iMTciPjwvbGluZT48L3N2Zz4=";
+                methodTitle.textContent = "Bank Transfer Details";
+            } else {
+                methodIcon.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM0Y2FmNTAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjAgMTBWOE0yMCA2djJNNCAxNHYyTTQgMTh2LTIiPjwvcGF0aD48cmVjdCB4PSI4IiB5PSI2IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgcng9IjIiPjwvcmVjdD48L3N2Zz4=";
+                methodTitle.textContent = "M-Pesa Details";
+            }
+
+            // Clear and populate details list
+            detailsList.innerHTML = '';
+            if (details.method === 'bank') {
+                const bankDetails = [
+                    { label: 'Bank Name', value: details.bankName },
+                    { label: 'Account Name', value: details.accountName },
+                    { label: 'Account Number', value: details.accountNumber }
+                ];
+                bankDetails.forEach(detail => {
+                    detailsList.innerHTML += `
+                        <div class="detail-item">
+                            <div class="detail-label">${detail.label}</div>
+                            <div class="detail-value">${detail.value}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                const mpesaDetails = [
+                    { label: 'Full Name', value: details.fullName },
+                    { label: 'Phone Number', value: details.phoneNumber }
+                ];
+                if (details.alternativeNumber) {
+                    mpesaDetails.push({ label: 'Alternative Number', value: details.alternativeNumber });
+                }
+                mpesaDetails.forEach(detail => {
+                    detailsList.innerHTML += `
+                        <div class="detail-item">
+                            <div class="detail-label">${detail.label}</div>
+                            <div class="detail-value">${detail.value}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Show details view, hide payment method view
+            detailsView.classList.add('active');
+            paymentMethodView.style.display = 'none';
+        }
+
+        function resetPaymentDetails() {
+            // Clear form fields
+            document.querySelectorAll('input').forEach(input => input.value = '');
+            
+            // Reset payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => method.classList.remove('active'));
+            document.querySelector('.payment-method[data-method="bank"]').classList.add('active');
+            
+            // Show payment method view, hide details view
+            document.getElementById('detailsView').classList.remove('active');
+            document.getElementById('paymentMethodView').style.display = 'block';
+            
+            // Reset form sections
+            document.querySelectorAll('.form-section').forEach(form => form.classList.remove('active'));
+            document.getElementById('bankForm').classList.add('active');
+        }
+
+        // Modify window.onload to check for existing payment details
+//        window.onload = function() {
+  //          const savedDetails = localStorage.getItem('paymentDetails');
+    //        if (savedDetails) {
+      //          const details = JSON.parse(savedDetails);
+        //        showDetailsView(details);
+          //  }
+        //};
+
+        // Modify modal open handler to check for existing payment details
+        document.querySelector('.add-btn').addEventListener('click', function() {
+            const savedDetails = localStorage.getItem('paymentDetails');
+            if (savedDetails) {
+                showDetailsView(JSON.parse(savedDetails));
+            } else {
+                document.getElementById('paymentMethodView').style.display = 'block';
+                document.getElementById('detailsView').classList.remove('active');
+            }
+            document.getElementById('paymentModal').style.display = 'block';
+        });
+
+  </script>
+</body>
+</html>

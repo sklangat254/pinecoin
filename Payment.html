@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Survey App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #00c853;
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .menu-btn {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .menu-icon {
+      display: block;
+      width: 24px;
+      height: 24px;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .balance-display {
+      text-align: center;
+      color: white;
+    }
+
+    .balance-display p {
+      font-size: 14px;
+    }
+
+    .balance-display h2 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .actions button {
+      background-color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .actions button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .surveys {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    .surveys h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .location-note {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+      padding: 12px;
+      background-color: #fff3e0;
+      border-radius: 8px;
+      border-left: 4px solid #ff9800;
+    }
+
+    .survey-item {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: transform 0.2s;
+    }
+
+    .survey-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .survey-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .survey-items {
+      background-color: #f8f4eb;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .survey-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .survey-details h4 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .survey-details p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .payout {
+      font-weight: 600;
+      color: #00c853;
+    }
+
+    .yyy {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 2px solid #e8e7e7;
+      margin: 20px 0;
+      color: #076b69;
+      font-weight: 500;
+    }
+
+    .labels {
+            flex: 1;
+            padding: 11px;
+            background: #ddeefa51;
+            color: #000000;
+            width: 100%;
+        }
+
+    .start-survey {
+      background-color: #1fbe61;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 90%;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(31, 190, 97, 0.2);
+    }
+
+    .start-survey:hover {
+      background-color: #18a352;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(31, 190, 97, 0.3);
+    }
+
+    /* Popup Styles */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+    }
+
+    .popup-content {
+      background-color: white;
+      padding: 32px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 90%;
+      width: 360px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: scale(0.9);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.active .popup-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .circular-image {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 4px solid #e8f5e9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .circular-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup-label {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .popup-text {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .verify-button {
+      background-color: #00c853;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 28px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 200, 83, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .verify-button:hover {
+      background-color: #00a844;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 200, 83, 0.3);
+    }
+
+    /* Loading animation for verification */
+    .loading-spinner {
+      display: none;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #00c853;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .success-checkmark {
+      display: none;
+      color: #00c853;
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .popup-input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.3s ease;
+      text-align: center;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .popup-input::placeholder {
+      letter-spacing: normal;
+      font-weight: normal;
+    }
+
+    .popup-input:focus {
+      border-color: #00c853;
+      box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.1);
+    }
+    /*----------------------------------------------------------*/
+    .verify-btnn {
+            background: linear-gradient(135deg, greenyellow, green);
+            color: #070930;
+            font-size: 0.8em;
+            padding: 10px 18px;
+            border-radius: 52px;
+            /*margin: 10px 0;*/
+            margin-left: 25%;
+            font-weight: bold;
+            width: 80%;
+            border: none;
+            cursor: pointer;
+            /*transition: background 0.2s;*/
+        }
+
+        .verify-btn:hover {
+            background: linear-gradient(135deg, green, greenyellow);
+        }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="surveys">
+      <div class="survey-item">
+        <div class="survey-info">
+          <h3>Confirm Payments</h3>
+        </div>        
+      </div>
+
+      <div class="survey-item">
+        <div class="survey-info">
+          <div class="survey-details">
+            <h4><span class="yyy">Selected Plan</span></h4>            
+            <p><span class="payout">✓</span><span class="payout" id="Business"> Business Basic : Ksh 300</span></p>
+            <h4><span class="yyy">How To Pay</span></h4>
+            <p><span class="payout">✓</span> Go to M-PESA</p>
+            <p><span class="payout">✓</span> Select : <span class="payout">Lipa na M-PESA</span></p>
+            <p><span class="payout">✓</span> Select : <span class="payout">Buy Goods and Services</span></p>
+            <p><span class="payout">✓</span> Enter Till No : <span class="payout">7543897</span></p>
+            <p><span class="payout">✓</span> Enter Amount : <span class="payout" id="packageprice">Ksh 300</span></p>
+            <div>
+              <div class="labels" >
+                  <button class="verify-btnn" onclick="copyTillNumber()" id="copytill">CLICK HERE TO COPY TILL</button>
+              </div>
+          </div>
+            <span class="yyy"></span>
+            <button class="start-survey" onclick="showPaymentPopup()">Confirm Payment</button>
+          </div>
+        </div>        
+      </div>
+
+      <div class="survey-items">
+        <div class="survey-info">
+          <p class="location-note">
+            <strong style="color: #076b69; display: block; margin-bottom: 8px;">NOTE</strong>
+            Payment system is selected based on user location for convenience purpose.
+          </p>
+        </div>        
+      </div>
+    </section>
+  </main>
+
+  <!-- Payment Verification Popup -->
+  <div class="popup-overlay" id="paymentPopup">
+    <div class="popup-content">
+      <div class="circular-image">
+        <img src="images/mpesa.png" alt="Payment verification">
+      </div>
+      <div class="loading-spinner" id="loadingSpinner"></div>
+      <div class="success-checkmark" id="successCheckmark">✓</div>
+      <div class="popup-label">Payment Verification</div>
+      <div class="popup-text">Please paste the entire M-PESA confirmation message sent to your phone in the space below:</div>
+      <input type="text" 
+             class="popup-input" 
+             id="verificationCode" 
+             placeholder="Paste M-PESA confirmation message"
+             maxlength="6"
+             autocomplete="off">
+      <button class="verify-button" onclick="handleVerification()" id="verifyButton">VERIFY</button>
+    </div>
+  </div>
+
+  <script>
+  const packageprice = document.getElementById('packageprice');
+  const Business = document.getElementById('Business');
+  const currentBalance = localStorage.getItem('surveyBalance');
+  if (currentBalance == 400){
+    Business.textContent = "Business Basic : Ksh " + currentBalance;
+    packageprice.textContent = "Ksh " + currentBalance;
+  } else if (currentBalance == 700) {
+    Business.textContent = "Business Premium : Ksh " + currentBalance;
+    packageprice.textContent = "Ksh " + currentBalance;
+  } else if (currentBalance == 1300) {
+    Business.textContent = "Business Expert : Ksh " + currentBalance;
+    packageprice.textContent = "Ksh " + currentBalance;
+  }
+
+//------------------------------------------------------------------------------------------------------
+function copyTillNumber() {
+    const tillNumber = '4098264';
+    navigator.clipboard.writeText(tillNumber).then(() => {
+        document.getElementById('copytill').innerText = "Till number copied!"
+        document.getElementById('copytill').style.color = 'black';
+        showToast("Till number copied to clipboard");
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+//------------------------------------------------------------------------------------------------------
+    function showPaymentPopup() {
+      const popup = document.getElementById('paymentPopup'); 
+      popup.style.display = 'flex';
+      setTimeout(() => {
+        popup.classList.add('active');
+      }, 10);
+    }
+
+    function handleVerification() {
+      const button = document.getElementById('verifyButton');
+      const spinner = document.getElementById('loadingSpinner');
+      const successMark = document.getElementById('successCheckmark');
+      const popupText = document.querySelector('.popup-text');
+      const input = document.getElementById('verificationCode');
+      const code = input.value.trim();
+
+      if (!code) {
+        input.style.borderColor = '#ff3333';
+        setTimeout(() => {
+          input.style.borderColor = '#e0e0e0';
+        }, 2000);
+        return;
+      }
+
+      // Disable input and button, show loading
+      input.disabled = true;
+      button.disabled = true;
+      button.style.opacity = '0.7';
+      spinner.style.display = 'block';
+      
+      // Simulate verification process
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        successMark.style.display = 'block';
+        popupText.textContent = 'Payment verified successfully!';
+        input.style.display = 'none'; // Hide input after success
+        button.textContent = 'CONTINUE';
+        localStorage.removeItem('surveyBalances');
+        localStorage.setItem('surveyBalances', 'true');
+        button.onclick = closePopup;
+        button.disabled = false;
+        button.style.opacity = '1';        
+      }, 2000);
+    }
+
+    function closePopup() {
+      const popup = document.getElementById('paymentPopup');
+      popup.classList.remove('active');
+      setTimeout(() => {
+        popup.style.display = 'none';
+        // Reset popup state
+        document.getElementById('successCheckmark').style.display = 'none';
+        document.getElementById('verifyButton').textContent = 'VERIFY';
+        document.getElementById('verificationCode').value = '';
+        document.getElementById('verificationCode').style.display = 'block';
+        document.getElementById('verificationCode').disabled = false;
+        document.querySelector('.popup-text').textContent = 'Please enter the confirmation code sent to your phone.';
+        window.location.href = 'Surveyboard.html';
+      }, 300);
+    }
+
+    // Add input validation to only allow numbers
+    //document.getElementById('verificationCode').addEventListener('input', function(e) {
+      //this.value = this.value.replace(/[^0-9]/g, '');
+    //});
+  </script>
+</body>
+</html>
